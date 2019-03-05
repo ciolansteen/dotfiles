@@ -6,6 +6,9 @@
 # Set ZSH theme (for some reasoun it has to be set before sourcing oh-my-zsh.sh
 ZSH_THEME="funky"
 
+# Default block cursor
+PROMPT_COMMAND="echo -e '\033[?112c'"
+
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -81,7 +84,7 @@ function zle-line-init zle-keymap-select {
         echo -ne "\e[2 q"
     else
         #  -- INSERT -- mode underscore cursor
-        echo -ne "\e[4 q"
+        echo -ne "\e[1 q"
     fi
     set-prompt
     zle reset-prompt
