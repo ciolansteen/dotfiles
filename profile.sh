@@ -25,22 +25,55 @@ include $HOME/.profilesen
 ### History settings
 export HISTCONTROL=ignoreboth     # ignoredups:ignorespace
 
-### Alliases 
-## Usual commands overrides
-# cd & ls
-cdls(){
-    cd $1;
-    ls --color=tty -ah;
-}
-alias cd="cdls"
+### Alliases [START]
+    ## FileManagement
+        # ls after a cd commad
+            cdls(){
+                cd $1;
+                ls --color=tty -ah;
+            }
+            alias cd='cdls'
+        # updatedb before locate
+            alias locate='sudo updatedb && sudo locate -i'
 
-# Maintainance
+    ## SysInfo
+    alias cpumonitor='watch -n0.1 "grep \"cpu MHz\" /proc/cpuinfo && echo \"\" && sensors"'
+    
+    
+    
+    ## SysControl
+        # Fan control
+        alias fan_auto='sudo echo level auto | sudo tee /proc/acpi/ibm/fan'
+        alias fan_off='sudo echo level 0 | sudo tee /proc/acpi/ibm/fan'
+        alias fan_1='sudo echo level 1 | sudo tee /proc/acpi/ibm/fan'
+        alias fan_2='sudo echo level 2 | sudo tee /proc/acpi/ibm/fan'
+        alias fan_3='sudo echo level 3 | sudo tee /proc/acpi/ibm/fan'
+        alias fan_4='sudo echo level 4 | sudo tee /proc/acpi/ibm/fan'
+        alias fan_5='sudo echo level 5 | sudo tee /proc/acpi/ibm/fan'
+        alias fan_6='sudo echo level 6 | sudo tee /proc/acpi/ibm/fan'
+        alias fan_7='sudo echo level 7 | sudo tee /proc/acpi/ibm/fan'
+        
 
+
+
+
+
+
+    ## Media
+
+
+
+
+
+    ## Gaming
+
+
+    ## Plasma
+    alias plasmarestart='kquitapp5 plasmashell && sleep 1 && kstart5 plasmashell'
 
 
 # Miscellaneous
-alias plasmarestart='kquitapp5 plasmashell && sleep 1 && kstart5 plasmashell'
-alias locate='sudo updatedb && sudo locate -i'
+
 alias netflix='qutebrowser :open netflix.com &'
 alias :q='exit'
 alias pigrep='grep -Pi --color'
@@ -51,7 +84,7 @@ alias touchpad_disable='xinput disable SynPS/2\ Synaptics\ TouchPad'
 alias touchpad_enable='xinput enable SynPS/2\ Synaptics\ TouchPad'
 alias trackpoint_disable='xinput disable TPPS/2\ IBM\ TrackPoint'
 alias trackpoint_enable='xinput enable TPPS/2\ IBM\ TrackPoint'
-alias reboot='sudo reboot'
+#alias reboot='sudo reboot'
 alias testasmtp='wine WinPrograms/Program\ Files\ \(x86\)/TestaSmtp.exe &'
 alias dosconf='vim ~/.dosbox/dosbox-0.74.conf'
 alias open='xdg-open'
@@ -59,17 +92,6 @@ alias open='xdg-open'
 alias svim='sudo -E vim'
 alias www='cd ~/Devel/www'
 alias edp144='xrandr --output eDP-1-1 --mode 1920x1080 -r 60 && xrandr --output eDP-1-1 --mode 1920x1080 -r 144'
-
-# Fan control
-alias fan_auto='sudo echo level auto | sudo tee /proc/acpi/ibm/fan'
-alias fan_off='sudo echo level 0 | sudo tee /proc/acpi/ibm/fan'
-alias fan_1='sudo echo level 1 | sudo tee /proc/acpi/ibm/fan'
-alias fan_2='sudo echo level 2 | sudo tee /proc/acpi/ibm/fan'
-alias fan_3='sudo echo level 3 | sudo tee /proc/acpi/ibm/fan'
-alias fan_4='sudo echo level 4 | sudo tee /proc/acpi/ibm/fan'
-alias fan_5='sudo echo level 5 | sudo tee /proc/acpi/ibm/fan'
-alias fan_6='sudo echo level 6 | sudo tee /proc/acpi/ibm/fan'
-alias fan_7='sudo echo level 7 | sudo tee /proc/acpi/ibm/fan'
 
 # My servers
 alias webdev_start='sudo mount --bind ~/Devel/www /srv/http && sudo systemctl start httpd.service && sudo mount --bind ~/Devel/mySQL /var/lib/mysql && sudo systemctl start mysqld.service'
@@ -90,23 +112,21 @@ alias paclistmyinstalls='expac -H M "%011m\t%-20n\t%10d" $(comm -23 <(pacman -Qq
 alias monitor_birou_on='xrandr --addmode DP-1 1680x1050 && xrandr --output DP-1 --mode 1680x1050 && xrandr --output DP-1 --pos -1920x0'
 alias monitor_birou_off='xrandr --output DP-1 --off'
 
-alias cpumonitor='watch -n0.1 "grep \"cpu MHz\" /proc/cpuinfo && echo \"\" && sensors"'
 alias kwincompON='qdbus org.kde.KWin /Compositor resume'
 alias kwincompOFF='qdbus org.kde.KWin /Compositor suspend'
+
+### Aliases [END]
 
 # MC Trash Support
 alias mc='LD_PRELOAD=/usr/lib/libtrash.so mc'
 
 alias clear='printf "\033c"'
 
-
-
-# Replace default tty with FbTerm/Tmux and connect to MasterConsole or create it 
-# if not in ssh session
 if command -v tmux>/dev/null; then # check if tmux is installed 
     # Chech if executed from a TTY and *not* from Tmux
     if [[ "$(tty)" =~ /dev/tty ]] && [[ ! "$TERM" =~ screen ]] && [ -z "$TMUX" ]; then
-        fbterm -- $(tmux new-session -A -s MasterConsole) 
+        #fbterm -- $(tmux new-session -A -s MasterConsole) 
+        tmux
     fi
 fi
 
@@ -116,7 +136,6 @@ fi
 #alias mc=mc_tmux
 
 . /usr/share/LS_COLORS/dircolors.sh
-
 
 # Set default editor
 if [[ -e /usr/bin/nvim ]]; then
