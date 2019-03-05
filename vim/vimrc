@@ -11,12 +11,20 @@
 "                                       "
 " " " " " " " " " " " " " " " " " " " " "
 
-" General Settings 
-set encoding=utf-8
-set nocompatible  " be iMproved, required
-filetype off  " required
-set exrc
-set guicursor=n-v-c:block-Cursor
+" ### General Settings 
+    set encoding=utf-8
+    set nocompatible  " be iMproved, required
+    filetype off  " required
+    " Set Cursor Shape to block
+    " NeoVim 
+        " Normal/Command/Visual mode(s) still block cursor
+        set guicursor=n-v-c:block-Cursor/lCursor
+        " Insert mode blinking block cursor
+        set guicursor=i:block-Cursor/lCursor-blinkon1
+    " Vim (For VTE compatible terminals (urxvt, st, xterm, Konsole, etc) 
+        let &t_SI = "\<Esc>[1 q"
+        let &t_EI = "\<Esc>[2 q"
+
 
 
 " Automatic installation for Vim-Plug
@@ -29,6 +37,7 @@ endif
 
 
 call plug#begin('~/.vim/plugged')
+
 
 " ==== File tree
 Plug 'scrooloose/nerdtree'
@@ -178,7 +187,7 @@ if has("autocmd")
 endif
 
 " ==== Write as Sudo
-cmap W w !sudo tee > /dev/null %
+cmap W w !sudo tee > /dev/null %i
 
 " CLIPBOARD
 " ==== Alias \"anonymous\" register to the \"*\" register 
