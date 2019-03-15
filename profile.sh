@@ -38,9 +38,9 @@ export HISTCONTROL=ignoreboth     # ignoredups:ignorespace
 
     ## SysInfo
     alias cpumonitor='watch -n0.1 "grep \"cpu MHz\" /proc/cpuinfo && echo \"\" && sensors"'
-    
-    
-    
+
+
+
     ## SysControl
         # Fan control
         alias fan_auto='sudo echo level auto | sudo tee /proc/acpi/ibm/fan'
@@ -52,9 +52,6 @@ export HISTCONTROL=ignoreboth     # ignoredups:ignorespace
         alias fan_5='sudo echo level 5 | sudo tee /proc/acpi/ibm/fan'
         alias fan_6='sudo echo level 6 | sudo tee /proc/acpi/ibm/fan'
         alias fan_7='sudo echo level 7 | sudo tee /proc/acpi/ibm/fan'
-        
-
-
 
 
 
@@ -70,6 +67,15 @@ export HISTCONTROL=ignoreboth     # ignoredups:ignorespace
 
     ## Plasma
     alias plasmarestart='kquitapp5 plasmashell && sleep 1 && kstart5 plasmashell'
+# Set default editor
+if [[ -e /usr/bin/nvim ]]; then
+        export EDITOR=nvim
+        alias vim='nvim'
+elif [[ -e /usr/bin/vim ]]; then
+        export EDITOR=vim
+else
+        export EDITOR=vi
+fi
 
 
 # Miscellaneous
@@ -134,12 +140,4 @@ alias kwincompOFF='qdbus org.kde.KWin /Compositor suspend'
 
 . /usr/share/LS_COLORS/dircolors.sh
 
-# Set default editor
-if [[ -e /usr/bin/nvim ]]; then
-        export EDITOR=nvim
-elif [[ -e /usr/bin/vim ]]; then
-        export EDITOR=vim
-else
-        export EDITOR=vi
-fi
 

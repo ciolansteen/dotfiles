@@ -86,6 +86,14 @@ so $HOME/dotfiles/vim/vimplugins
     " Replace all (%s//g)
     nnoremap SG :%s//g<Left><Left>
 
+    " Sane Modifier Keybinding
+    nnoremap <M-w> <C-w>
+
+    " Sane New Buffer Splits
+    nnoremap \\ :vnew<enter>
+    nnoremap -- :new<enter>
     " Write as Sudo
     cmap w!! w !sudo tee > /dev/null %
+    
+
 
