@@ -19,6 +19,8 @@ so $HOME/dotfiles/vim/vimplugins
     set encoding=utf-8
     " Allow IMproved feature
     set nocompatible
+    " # Clipboard Integration 
+        set clipboard=unnamedplus
     " # Mouse Integration
         " Enable Mouse use in all modes (NORMAL, INSERT, VISUAL & command-line modes)
         set mouse=a
@@ -26,7 +28,9 @@ so $HOME/dotfiles/vim/vimplugins
         set ttyfast
         " Set this to the name of a vt that supports mouse codes
         " available options: xterm, xterm2, netterm, dec, jsbterm, pterm
-        set ttymouse=xterm2
+        if !has('nvim')
+            set ttymouse=xterm2
+        endif
         " GVim Settings
         if !has('gvim')
             set guioptions-=T
@@ -76,21 +80,7 @@ so $HOME/dotfiles/vim/vimplugins
         endif
 
 " ### Keyboard Mapping
-    " # Clipboard Integration 
-        " Alias \"anonymous\" register to the \"*\" register 
-        set clipboard=unnamedplus
-        " Copy to clipboard
-        vnoremap  <leader>y  "+y
-        nnoremap  <leader>Y  "+yg_
-        nnoremap  <leader>y  "+y
-        nnoremap  <leader>yy  "+yy
-        " Paste from clipboard
-        nnoremap <leader>p "+p
-        nnoremap <leader>P "+P
-        vnoremap <leader>p "+p
-        vnoremap <leader>P "+P
-
-    " Command overrides for stupid CAPS LOCK possition
+    " Command overrides for stupid CAPS LOCK position
     cnoreabbrev Q q
 
     " Replace all (%s//g)

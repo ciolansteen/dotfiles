@@ -126,14 +126,6 @@
             " Color Codes Highlighting - https://github.com/chrisbra/Colorizer/blob/master/README.md
             " Display Devicons (Glyphs) in vim
 
-       " # Web Design
-                " Browserlink - https://github.com/jaxbot/browserlink.vim/blob/master/README.md
-                " reload file from disk when entering insert mode
-                set autoread
-                " autoload file changes from disk each time entering
-                " --INSERT-- mode
-                autocmd InsertEnter * :checktime
-
 " ==== Completion
 "
 "   " ==== Autoclosing of quotes, parenthesis, brackets, etc
@@ -146,19 +138,6 @@
 
 "
 "
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 "" ==== YCM and UltiSnips compatibility, with the helper of supertab
 "let g:SuperTabDefaultCompletionType    = '<C-n>'
