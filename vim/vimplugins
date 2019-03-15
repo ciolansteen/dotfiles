@@ -20,44 +20,53 @@
 
 " ### Plugins Install
     call plug#begin('$HOME/.vim/plugged')
-        " # Interface
-            " Themes
+        " ## Interface
+            " # Themes
                 " Gruvbox - https://github.com/morhetz/gruvbox/blob/master/README.md
                 Plug 'morhetz/gruvbox'
                 " Vim Airline - https://github.com/vim-airline/vim-airline/wiki
                 Plug 'vim-airline/vim-airline'
                 " Glyphs Display
                 Plug 'ryanoasis/vim-devicons'
-    
-        " # System Interaction
+
+        " ## Code Writing
+            " # Markup Languages
+                " VimTeX - https://github.com/lervag/vimtex/blob/master/README.md
+                Plug 'lervag/vimtex'
+                " VimWiki - syntax highlight for wiki documents (.md, .markdown, etc)
+                Plug 'vimwiki/vimwiki'
+
+            " # Syntax Helpers
+                " Color Codes Highlighting - https://github.com/chrisbra/Colorizer/blob/master/README.md
+                Plug 'chrisbra/Colorizer'
+                " Syntastic - Syntax checking - https://github.com/vim-syntastic/syntastic#introduction
+                Plug 'scrooloose/syntastic'
+                " QML Syntax highlight
+                Plug 'peterhoeg/vim-qml'
+            " # Comments
+
+            " # Web Design
+                " Browserlink - https://github.com/jaxbot/browserlink.vim/blob/master/README.md
+                Plug 'jaxbot/browserlink.vim'
+
+        " ## System Interaction
             " Nerd Tree File Manager - https://github.com/scrooloose/nerdtree/blob/master/README.markdown
             Plug 'scrooloose/nerdtree'
-    
-        " # Editing Helpers
+
+        " ## Editing Helpers
             " Multiple Cursors in Vim - https://github.com/terryma/vim-multiple-cursors/wiki/Keystrokes-for-example-gifs
             Plug 'terryma/vim-multiple-cursors'
-        " # Git Interaction
-    
-        " # Syntax Helpers
-            " Color Codes Highlighting - https://github.com/chrisbra/Colorizer/blob/master/README.md
-            Plug 'chrisbra/Colorizer'
-            " Syntastic - Syntax checking - https://github.com/vim-syntastic/syntastic#introduction
-            Plug 'scrooloose/syntastic'
-            " QML Syntax highlight
-            Plug 'peterhoeg/vim-qml'
-    
-    
-    
-        " # Programming Frameworks
-            " WordPress
+        " ## Git Interaction
+
     call plug#end()
+
 
 " ### Plugins Settings
     " # Vim Themes
         " Vim AirLine
             " Don't use PowerLine Arrows 
             let g:airline_powerline_fonts = 0
-        
+
         " Gruvbox
             colorscheme gruvbox
             let g:gruvbox_contrast_light="medium"
@@ -100,21 +109,30 @@
 
     " # Editing Helpers
         " Multiple Cursors in Vim - https://github.com/terryma/vim-multiple-cursors/wiki/Keystrokes-for-example-gifs
-    
+
     " # Git Interaction
 
-    " # Syntax Helpers
-        " Syntastic - Syntax checking - https://github.com/vim-syntastic/syntastic#introduction
-        " Color Codes Highlighting - https://github.com/chrisbra/Colorizer/blob/master/README.md
-        " Display Devicons (Glyphs) in vim
 
-    " # Programming Frameworks
-        " WordPress
+    " ## Code Writing 
+        " # Markup Languages
+            " Vim LaTeX Live Preview - https://github.com/xuhdev/vim-latex-live-preview/blob/master/README.md
+                " prevent recompilation on cursor hold
+                let g:livepreview_cursorhold_recompile = 0
+            " VimWiki - markdown plugin
+             let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'} 
 
+        " # Syntax Helpers
+            " Syntastic - Syntax checking - https://github.com/vim-syntastic/syntastic#introduction
+            " Color Codes Highlighting - https://github.com/chrisbra/Colorizer/blob/master/README.md
+            " Display Devicons (Glyphs) in vim
 
-
-
-
+       " # Web Design
+                " Browserlink - https://github.com/jaxbot/browserlink.vim/blob/master/README.md
+                " reload file from disk when entering insert mode
+                set autoread
+                " autoload file changes from disk each time entering
+                " --INSERT-- mode
+                autocmd InsertEnter * :checktime
 
 " ==== Completion
 "
@@ -130,7 +148,12 @@
 "
 
 
-"
+
+
+
+
+
+
 
 
 
@@ -191,10 +214,3 @@ let g:mta_filetypes = {'html' : 1, 'eruby' : 1, 'xhtml' : 1, 'xml' : 1, 'jinja' 
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
-
-" ==== Write as Sudo
-cmap W w !sudo tee > /dev/null %i
-
-
-
-

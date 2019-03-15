@@ -88,7 +88,6 @@ alias trackpoint_enable='xinput enable TPPS/2\ IBM\ TrackPoint'
 alias testasmtp='wine WinPrograms/Program\ Files\ \(x86\)/TestaSmtp.exe &'
 alias dosconf='vim ~/.dosbox/dosbox-0.74.conf'
 alias open='xdg-open'
-#alias vim='nvim'
 alias svim='sudo -E vim'
 alias www='cd ~/Devel/www'
 alias edp144='xrandr --output eDP-1-1 --mode 1920x1080 -r 60 && xrandr --output eDP-1-1 --mode 1920x1080 -r 144'
@@ -117,18 +116,16 @@ alias kwincompOFF='qdbus org.kde.KWin /Compositor suspend'
 
 ### Aliases [END]
 
-# MC Trash Support
-alias mc='LD_PRELOAD=/usr/lib/libtrash.so mc'
-
-alias clear='printf "\033c"'
-
-if command -v tmux>/dev/null; then # check if tmux is installed 
-    # Chech if executed from a TTY and *not* from Tmux
-    if [[ "$(tty)" =~ /dev/tty ]] && [[ ! "$TERM" =~ screen ]] && [ -z "$TMUX" ]; then
-        #fbterm -- $(tmux new-session -A -s MasterConsole) 
-        tmux
-    fi
-fi
+## MC Trash Support
+#alias clear='printf "\033c"'
+#
+#if command -v tmux>/dev/null; then # check if tmux is installed 
+#    # Chech if executed from a TTY and *not* from Tmux
+#    if [[ "$(tty)" =~ /dev/tty ]] && [[ ! "$TERM" =~ screen ]] && [ -z "$TMUX" ]; then
+#        #fbterm -- $(tmux new-session -A -s MasterConsole) 
+#        tmux
+#    fi
+#fi
 
 #mc_tmux(){
 #    [[ -z $TMUX ]] && mc -c || TERM=xterm-256color mc -c
@@ -139,10 +136,10 @@ fi
 
 # Set default editor
 if [[ -e /usr/bin/nvim ]]; then
-        EDITOR=nvim
+        export EDITOR=nvim
 elif [[ -e /usr/bin/vim ]]; then
-        EDITOR=vim
+        export EDITOR=vim
 else
-        EDITOR=vi
+        export EDITOR=vi
 fi
 

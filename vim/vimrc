@@ -21,9 +21,12 @@ so $HOME/dotfiles/vim/vimplugins
     set nocompatible
     " # Mouse Integration
         " Enable Mouse use in all modes (NORMAL, INSERT, VISUAL & command-line modes)
-            set mouse=a
+        set mouse=a
         " Send more characters for redraws
-            set ttyfast
+        set ttyfast
+        " Set this to the name of a vt that supports mouse codes
+        " available options: xterm, xterm2, netterm, dec, jsbterm, pterm
+        set ttymouse=xterm2
         " GVim Settings
         if !has('gvim')
             set guioptions-=T
@@ -60,7 +63,14 @@ so $HOME/dotfiles/vim/vimplugins
             " Vim (For VTE compatible terminals (urxvt, st, xterm, Konsole, etc)
             let &t_SI = "\<Esc>[1 q"
             let &t_EI = "\<Esc>[2 q"
-    " Remember line number (position) after exiting a file
+
+    " # File Handling
+        " Enable autoread file changes from disk
+        set autoread
+        " autoload file changes from disk each time entering/exiting --INSERT-- mode
+        autocmd InsertEnter * :checktime
+        autocmd InsertLeave * :checktime
+        " Remember line number (position) after exiting a file
         if has("autocmd")
             au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
         endif
@@ -80,7 +90,6 @@ so $HOME/dotfiles/vim/vimplugins
         vnoremap <leader>p "+p
         vnoremap <leader>P "+P
 
-
     " Command overrides for stupid CAPS LOCK possition
     cnoreabbrev Q q
 
@@ -88,5 +97,5 @@ so $HOME/dotfiles/vim/vimplugins
     nnoremap SG :%s//g<Left><Left>
 
     " Write as Sudo
-    cmap W w !sudo tee > /dev/null %i
+    cmap w!! w !sudo tee > /dev/null %
 
