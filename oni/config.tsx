@@ -30,7 +30,7 @@ export const configuration = {
   "oni.useDefaultConfig": true,
   //"oni.bookmarks": ["~/Documents"],
   "oni.loadInitVim": true,
-  "editor.fontSize": "16px",
+  "editor.fontSize": "18px",
   "editor.fontFamily": "Hack",
 
   // UI customizations
