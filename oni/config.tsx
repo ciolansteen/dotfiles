@@ -32,6 +32,7 @@ export const configuration = {
   "oni.loadInitVim": true,
   "editor.fontSize": "18px",
   "editor.fontFamily": "Hack",
+  "editor.linePadding": 0,
 
   // UI customizations
   "ui.colorscheme": "gruvbox",
