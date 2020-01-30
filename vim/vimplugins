@@ -31,10 +31,16 @@
 
         " ## Code Writing
             " # Markup Languages
+                " Tabular - https://github.com/godlygeek/tabular/blob/master/README.md
+                Plug 'godlygeek/tabular'
                 " VimTeX - https://github.com/lervag/vimtex/blob/master/README.md
                 Plug 'lervag/vimtex'
-                " VimWiki - syntax highlight for wiki documents (.md, .markdown, etc)
-                Plug 'vimwiki/vimwiki'
+               	" VimMarkdown
+                Plug 'plasticboy/vim-markdown'
+				" MarkDown Preview - https://github.com/iamcco/markdown-preview.nvim/blob/master/README.md
+                Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+                " Browserlink - https://github.com/jaxbot/browserlink.vim/blob/master/README.md
+                Plug 'jaxbot/browserlink.vim'
 
             " # Syntax Helpers
                 " Color Codes Highlighting - https://github.com/chrisbra/Colorizer/blob/master/README.md
@@ -43,17 +49,24 @@
                 Plug 'scrooloose/syntastic'
                 " QML Syntax highlight
                 Plug 'peterhoeg/vim-qml'
+                " Toml Syntax highlight - https://github.com/cespare/vim-toml/blob/master/README.md
+                Plug 'cespare/vim-toml'
+                " Dockerfile Syntax highlight - https://github.com/ekalinin/Dockerfile.vim
+                Plug 'ekalinin/Dockerfile.vim'
             " # Comments
 
             " # Web Design
-                " Browserlink - https://github.com/jaxbot/browserlink.vim/blob/master/README.md
-                Plug 'jaxbot/browserlink.vim'
 
+            " # Debugging
+            " Vdebug - Multi-Language debugger for vim (Python, Ruby, PHP, Perl, Tcl and NodeJS - https://github.com/vim-vdebug/vdebug
+                Plug 'vim-vdebug/vdebug'
+
+        " ## Vim Helpers
+            Plug 'Raimondi/delimitMate'
         " ## System Interaction
             " Nerd Tree File Manager - https://github.com/scrooloose/nerdtree/blob/master/README.markdown
             Plug 'scrooloose/nerdtree'
-
-        " ## Editing Helpers
+            " ## Editing Helpers
             " Multiple Cursors in Vim - https://github.com/terryma/vim-multiple-cursors/wiki/Keystrokes-for-example-gifs
             Plug 'terryma/vim-multiple-cursors'
         " ## Git Interaction
@@ -65,12 +78,15 @@
     " # Vim Themes
         " Vim AirLine
             " Don't use PowerLine Arrows 
-            let g:airline_powerline_fonts = 0
+            let g:airline_powerline_fonts = 1
 
         " Gruvbox
             colorscheme gruvbox
             let g:gruvbox_contrast_light="medium"
-
+    " # Debuggers
+    " Vdebug - Multi-Language debugger for vim (Python, Ruby, PHP, Perl, Tcl and NodeJS - https://github.com/vim-vdebug/vdebug
+    let g:vdebug_options = {'server': 'localhost'}
+    
     " # System Interaction
         " Nerd Tree File Manager
             " NerdTree Ignore list
@@ -104,7 +120,7 @@
                 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
             "Autoclose Vim if the only window left open is NerdTree
                 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-            "NerdTree Key shortcut
+            "NerdTree Key Toggle
                 map <C-t> :NERDTreeToggle<CR>
 
     " # Editing Helpers
@@ -115,12 +131,20 @@
 
     " ## Code Writing 
         " # Markup Languages
-            " Vim LaTeX Live Preview - https://github.com/xuhdev/vim-latex-live-preview/blob/master/README.md
+            " Vimtex - 
+                " ignore overfull/underfull warnings
+                    let g:vimtex_quickfix_latexlog = {
+                        \ 'overfull' : 0,
+                        \ 'underfull' : 0,
+                        \}
+
                 " prevent recompilation on cursor hold
                 let g:livepreview_cursorhold_recompile = 0
-            " VimWiki - markdown plugin
-             let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'} 
-
+            " Vim Markdown
+                let g:vim_markdown_folding_disabled = 1
+            " Markdown Preview
+                let g:mkdp_auto_start = 0
+                nmap <Leader>ml <Plug>MarkdownPreviewToggle
         " # Syntax Helpers
             " Syntastic - Syntax checking - https://github.com/vim-syntastic/syntastic#introduction
             " Color Codes Highlighting - https://github.com/chrisbra/Colorizer/blob/master/README.md

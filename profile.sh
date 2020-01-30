@@ -22,24 +22,32 @@ include (){
 
 include $HOME/.profilesen
 
+. /usr/share/LS_COLORS/dircolors.sh
+
 ### History settings
 export HISTCONTROL=ignoreboth     # ignoredups:ignorespace
 
 ### Alliases [START]
     ## FileManagement
-        # ls after a cd commad
-            cdls(){
-                cd $1;
-                ls --color=tty -ah;
-            }
-            alias cd='cdls'
-        # updatedb before locate
-            alias locate='sudo updatedb && sudo locate -i'
+    # some more ls aliases
+    alias ll='ls -lF'
+    alias la='ls -A'
+    alias l='ls -CF'
+
+    # ls after a cd commad
+    cdls(){
+        cd "$1";    # treat $1 as a string - useful for paths including spaces
+        ls -ah;
+    }
+    alias cd='cdls '
+    # updatedb before locatd
+    alias locate='sudo updatedb && sudo locate -i'
 
     ## SysInfo
     alias cpumonitor='watch -n0.1 "grep \"cpu MHz\" /proc/cpuinfo && echo \"\" && sensors"'
-
-
+    
+    ## Watch fast
+    alias watch='watch -n0.1'
 
     ## SysControl
         # Fan control
@@ -54,19 +62,16 @@ export HISTCONTROL=ignoreboth     # ignoredups:ignorespace
         alias fan_7='sudo echo level 7 | sudo tee /proc/acpi/ibm/fan'
 
 
-
-
     ## Media
 
 
-
-
-
     ## Gaming
-
-
+        alias codingame='vim ~/Games/CodinGame/SyncFile'
+        alias worms='cd Games/SteamLibrary/steamapps/common/WormsWMD/ && ./Run.sh'
     ## Plasma
     alias plasmarestart='kquitapp5 plasmashell && sleep 1 && kstart5 plasmashell'
+
+
 # Set default editor
 if [[ -e /usr/bin/nvim ]]; then
         export EDITOR=nvim
@@ -78,32 +83,37 @@ else
 fi
 
 
-# Miscellaneous
+if [[ -e /usr/bin/oni ]]; then
+    alias oni='oni .'
+fi
 
-alias netflix='qutebrowser :open netflix.com &'
+# Miscellaneous
+alias home='cd ~'
+alias youtube='youtube-viewer -C'
 alias :q='exit'
 alias pigrep='grep -Pi --color'
 alias ssystemctl='sudo systemctl'
 alias netrestart='sudo systemctl restart NetworkManager'
 alias mouserestart='sudo modprobe -r psmouse && sudo modprobe psmouse'
-alias touchpad_disable='xinput disable SynPS/2\ Synaptics\ TouchPad'
-alias touchpad_enable='xinput enable SynPS/2\ Synaptics\ TouchPad'
-alias trackpoint_disable='xinput disable TPPS/2\ IBM\ TrackPoint'
-alias trackpoint_enable='xinput enable TPPS/2\ IBM\ TrackPoint'
-#alias reboot='sudo reboot'
 alias testasmtp='wine WinPrograms/Program\ Files\ \(x86\)/TestaSmtp.exe &'
 alias dosconf='vim ~/.dosbox/dosbox-0.74.conf'
 alias open='xdg-open'
-alias svim='sudo -E vim'
+alias svim='sudo vim'
+alias vimdiff='nvim -d'
 alias www='cd ~/Devel/www'
-alias edp144='xrandr --output eDP-1-1 --mode 1920x1080 -r 60 && xrandr --output eDP-1-1 --mode 1920x1080 -r 144'
 
 # My servers
 alias webdev_start='sudo mount --bind ~/Devel/www /srv/http && sudo systemctl start httpd.service && sudo mount --bind ~/Devel/mySQL /var/lib/mysql && sudo systemctl start mysqld.service'
 alias webdev_stop='sudo systemctl stop httpd.service && sudo umount -l /srv/http && sudo systemctl stop mysqld.service && sudo umount -l /var/lib/mysql'
 
 # My VMs
+alias virsh='sudo virsh'
+alias vired='virsh edit'
 alias windows='VBoxManage startvm "Windows8.1"'
+alias winsize='du -h $HOME/VirtualMachines/Win10.qcow2'
+alias node1='ssh root@192.168.122.10'
+alias node2='ssh root@192.168.122.11'
+alias node3='ssh root@192.168.122.12'
 
 # Pacman Aliasses
 alias yupdate='yay -Syyu && pkcon refresh'
@@ -114,30 +124,21 @@ alias pacrmorphans='sudo pacman -Rns $(pacman -Qtdq)'
 alias pacmirrorefresh='sudo reflector --verbose --latest 5 --sort rate --save /etc/pacman.d/mirrorlist'
 alias paclistmyinstalls='expac -H M "%011m\t%-20n\t%10d" $(comm -23 <(pacman -Qqen | sort) <(pacman -Qqg base base-devel | sort)) | sort -n'
 
-alias monitor_birou_on='xrandr --addmode DP-1 1680x1050 && xrandr --output DP-1 --mode 1680x1050 && xrandr --output DP-1 --pos -1920x0'
-alias monitor_birou_off='xrandr --output DP-1 --off'
+# Locations
+alias devel='cd $HOME/PlayGround/Devel'
+alias learning='cd $HOME/PlayGround/Learning'
 
-alias kwincompON='qdbus org.kde.KWin /Compositor resume'
-alias kwincompOFF='qdbus org.kde.KWin /Compositor suspend'
 
-### Aliases [END]
+# Alsa Mixer
+alias scarmix='alsamixer -cUSB'
 
-## MC Trash Support
-#alias clear='printf "\033c"'
-#
-#if command -v tmux>/dev/null; then # check if tmux is installed 
-#    # Chech if executed from a TTY and *not* from Tmux
-#    if [[ "$(tty)" =~ /dev/tty ]] && [[ ! "$TERM" =~ screen ]] && [ -z "$TMUX" ]; then
-#        #fbterm -- $(tmux new-session -A -s MasterConsole) 
-#        tmux
-#    fi
-#fi
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export DISPLAY=:0
+#export SCRIPTS_DIR='/usr/cln'
 
-#mc_tmux(){
-#    [[ -z $TMUX ]] && mc -c || TERM=xterm-256color mc -c
-#}
-#alias mc=mc_tmux
-
-. /usr/share/LS_COLORS/dircolors.sh
-
+alias sudo='sudo -E '
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 

@@ -1,8 +1,6 @@
 ### Ciolansteen's ZSHrc
 
 # Settings
-# Load .profile file
-[[ -e ~/.profile ]] && emulate sh -c 'source $HOME/.profile'
 # Set ZSH theme (for some reasoun it has to be set before sourcing oh-my-zsh.sh
 ZSH_THEME="funky"
 
@@ -44,9 +42,13 @@ plugins=(
     git
     vi-mode
     history-substring-search
+    docker
+    docker-compose
 )
 
 source $ZSH/oh-my-zsh.sh
+# Load .profile file - Must be loaded before oh-my-zsh to override ls=ls_extend
+[[ -e ~/.profile ]] && emulate sh -c 'source $HOME/.profile'
 
 ### Look and feel
 # Use GNU dircolors

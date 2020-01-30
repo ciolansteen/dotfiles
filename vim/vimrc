@@ -21,6 +21,8 @@ so $HOME/dotfiles/vim/vimplugins
     set nocompatible
     " # Clipboard Integration 
         set clipboard=unnamedplus
+    " # Persistent history
+        set undofile
     " # Mouse Integration
         " Enable Mouse use in all modes (NORMAL, INSERT, VISUAL & command-line modes)
         set mouse=a
@@ -90,10 +92,12 @@ so $HOME/dotfiles/vim/vimplugins
     nnoremap <M-w> <C-w>
 
     " Sane New Buffer Splits
-    nnoremap \\ :vnew<enter>
-    nnoremap -- :new<enter>
-    " Write as Sudo
+    nnoremap <M-\> :vnew<enter>
+    nnoremap <M--> :new<enter>
+
+    " Write a Sudo
     cmap w!! w !sudo tee > /dev/null %
-    
 
-
+    " Execute current buffer in console
+    nnoremap <M-r> :!./%<enter>
+    nnoremap <M-R> :!./%
