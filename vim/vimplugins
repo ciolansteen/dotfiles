@@ -70,6 +70,9 @@
             " Multiple Cursors in Vim - https://github.com/terryma/vim-multiple-cursors/wiki/Keystrokes-for-example-gifs
             Plug 'terryma/vim-multiple-cursors'
         " ## Git Interaction
+            " Git Gutter
+            Plug 'airblade/vim-gitgutter'
+
 
     call plug#end()
 
@@ -113,8 +116,8 @@
             "NerdTree Buffer Position
                 let g:NERDTreeWinPos="left"
             "NerdTree Dir Arrows Replacements
-                let g:NERDTreeDirArrowExpandable = '+'
-                let g:NERDTreeDirArrowCollapsible = '-'
+               let g:NERDTreeDirArrowExpandable = '+'
+               let g:NERDTreeDirArrowCollapsible = '-'
             "Start NerdTree automatically if Vim was opened with a directory as argument
                 autocmd StdinReadPre * let s:std_in=1
                 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
