@@ -15,6 +15,9 @@
 # profile_CLN_RC ver=1.0
 #
 
+export PATH=$PATH:/home/ciolansteen/bin
+export MC_XDG_OPEN=~/bin/nohup-open
+
 ### Sources
 include (){
     [[ -f "$1" ]] && source "$1"
@@ -29,6 +32,10 @@ export HISTCONTROL=ignoreboth     # ignoredups:ignorespace
 
 ### Alliases [START]
     ## FileManagement
+
+    # rm to trash
+    alias rm='rmtrash'
+    alias rmdir='rmtrash'
     # some more ls aliases
     alias ll='ls -lF'
     alias la='ls -A'
@@ -88,6 +95,7 @@ if [[ -e /usr/bin/oni ]]; then
 fi
 
 # Miscellaneous
+alias mc='. /usr/lib/mc/mc-wrapper.sh'
 alias home='cd ~'
 alias youtube='youtube-viewer -C'
 alias :q='exit'
