@@ -1,3 +1,0 @@
-#!/bin/bash
-unset LD_PRELOAD
-nohup xdg-open "$@" & rm nohup.out &
