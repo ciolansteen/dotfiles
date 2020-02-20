@@ -129,7 +129,8 @@
         " Multiple Cursors in Vim - https://github.com/terryma/vim-multiple-cursors/wiki/Keystrokes-for-example-gifs
 
     " # Git Interaction
-
+        " Git Gutter
+         let g:gitgutter_max_signs = 9999999
 
     " ## Code Writing 
         " # Markup Languages

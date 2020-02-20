@@ -1,5 +1,10 @@
 ### Ciolansteen's ZSHrc
 
+
+# Load mime info
+autoload -U zsh-mime-setup
+zsh-mime-setup
+
 # Settings
 # Set ZSH theme (for some reasoun it has to be set before sourcing oh-my-zsh.sh
 ZSH_THEME="funky"

@@ -16,7 +16,7 @@
 #
 
 export PATH=$PATH:/home/ciolansteen/bin
-export MC_XDG_OPEN=~/bin/nohup-open
+export MC_XDG_OPEN=/home/ciolansteen/bin/nohup-open
 
 ### Sources
 include (){
@@ -24,6 +24,7 @@ include (){
 }
 
 include $HOME/.profilesen
+include $HOME/dotfiles/aliases.sh
 
 . /usr/share/LS_COLORS/dircolors.sh
 
@@ -57,20 +58,8 @@ export HISTCONTROL=ignoreboth     # ignoredups:ignorespace
     alias watch='watch -n0.1'
 
     ## SysControl
-        # Fan control
-        alias fan_auto='sudo echo level auto | sudo tee /proc/acpi/ibm/fan'
-        alias fan_off='sudo echo level 0 | sudo tee /proc/acpi/ibm/fan'
-        alias fan_1='sudo echo level 1 | sudo tee /proc/acpi/ibm/fan'
-        alias fan_2='sudo echo level 2 | sudo tee /proc/acpi/ibm/fan'
-        alias fan_3='sudo echo level 3 | sudo tee /proc/acpi/ibm/fan'
-        alias fan_4='sudo echo level 4 | sudo tee /proc/acpi/ibm/fan'
-        alias fan_5='sudo echo level 5 | sudo tee /proc/acpi/ibm/fan'
-        alias fan_6='sudo echo level 6 | sudo tee /proc/acpi/ibm/fan'
-        alias fan_7='sudo echo level 7 | sudo tee /proc/acpi/ibm/fan'
-
 
     ## Media
-
 
     ## Gaming
         alias codingame='vim ~/Games/CodinGame/SyncFile'
@@ -95,7 +84,6 @@ if [[ -e /usr/bin/oni ]]; then
 fi
 
 # Miscellaneous
-alias mc='. /usr/lib/mc/mc-wrapper.sh'
 alias home='cd ~'
 alias youtube='youtube-viewer -C'
 alias :q='exit'
@@ -109,19 +97,12 @@ alias open='xdg-open'
 alias svim='sudo vim'
 alias vimdiff='nvim -d'
 alias www='cd ~/Devel/www'
+alias hosts='sudo vim /etc/hosts'
 
-# My servers
-alias webdev_start='sudo mount --bind ~/Devel/www /srv/http && sudo systemctl start httpd.service && sudo mount --bind ~/Devel/mySQL /var/lib/mysql && sudo systemctl start mysqld.service'
-alias webdev_stop='sudo systemctl stop httpd.service && sudo umount -l /srv/http && sudo systemctl stop mysqld.service && sudo umount -l /var/lib/mysql'
 
 # My VMs
 alias virsh='sudo virsh'
 alias vired='virsh edit'
-alias windows='VBoxManage startvm "Windows8.1"'
-alias winsize='du -h $HOME/VirtualMachines/Win10.qcow2'
-alias node1='ssh root@192.168.122.10'
-alias node2='ssh root@192.168.122.11'
-alias node3='ssh root@192.168.122.12'
 
 # Pacman Aliasses
 alias yupdate='yay -Syyu && pkcon refresh'
