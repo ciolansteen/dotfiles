@@ -55,6 +55,7 @@ so $HOME/dotfiles/vim/vimplugins
     " # Interface
         set background=dark
         hi Normal ctermbg=NONE
+        hi NonText ctermbg=NONE
         " NonText Characters color
         hi NonText ctermfg=240 guifg=#585858
         " Change vertical buffer-split characters for nicer look

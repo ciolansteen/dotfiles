@@ -16,7 +16,7 @@
 #
 
 export PATH=$PATH:/home/ciolansteen/bin
-export MC_XDG_OPEN=/home/ciolansteen/bin/nohup-open
+export MC_XDG_OPEN=nohup-open
 
 ### Sources
 include (){

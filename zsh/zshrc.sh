@@ -45,10 +45,12 @@ HIST_STAMPS="%d/%m/%y %k:%M:%S"
 # plugins=(rails git textmate ruby lighthouse)
 plugins=(
     git
+    helm
     vi-mode
     history-substring-search
     docker
     docker-compose
+    ruby
 )
 
 source $ZSH/oh-my-zsh.sh

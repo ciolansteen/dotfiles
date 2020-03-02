@@ -53,6 +53,9 @@
                 Plug 'cespare/vim-toml'
                 " Dockerfile Syntax highlight - https://github.com/ekalinin/Dockerfile.vim
                 Plug 'ekalinin/Dockerfile.vim'
+                " Ansible Syntax highlight - https://github.com/pearofducks/ansible-vim
+                Plug 'pearofducks/ansible-vim', { 'do': './UltiSnips/generate.sh' }
+                " 
             " # Comments
 
             " # Web Design
@@ -81,7 +84,6 @@
         " Vim AirLine
             " Don't use PowerLine Arrows 
             let g:airline_powerline_fonts = 1
-
         " Gruvbox
             colorscheme gruvbox
             let g:gruvbox_contrast_light="medium"
@@ -152,7 +154,21 @@
             " Syntastic - Syntax checking - https://github.com/vim-syntastic/syntastic#introduction
             " Color Codes Highlighting - https://github.com/chrisbra/Colorizer/blob/master/README.md
             " Display Devicons (Glyphs) in vim
-
+            " Ansible Syntax highlight - https://github.com/pearofducks/ansible-vim
+                let g:ansible_unindent_after_newline = 1
+                let g:ansible_yamlKeyName = 'yamlKey'
+                let g:ansible_attribute_highlight = "ob"
+                let g:ansible_name_highlight = 'd'
+                let g:ansible_extra_keywords_highlight = 1
+                let g:ansible_normal_keywords_highlight = 'Constant'
+                let g:ansible_with_keywords_highlight = 'Constant'
+                let g:ansible_template_syntaxes = { '*.rb.j2': 'ruby' }
+            " VagrantFile syntax as ruby
+                augroup vagrant
+                    au!
+                    au BufRead,BufNewFile Vagrantfile set filetype=ruby
+                augroup END
+                
 " ==== Completion
 "
 "   " ==== Autoclosing of quotes, parenthesis, brackets, etc
