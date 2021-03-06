@@ -36,18 +36,14 @@ cdls(){
 ### fix for MC being an ass when expanding variables containg spaces - see: https://github.com/fish-shell/fish-shell/issues/6162
 emacsClientScriptFile="${tempFolder}/emacsclient"
 emacsClientScriptSpawn(){
-    ### POSIX Shell only have one array - the positional parameters ($1 $2, etc), reffered to using "$@". To make this script compliant with POSIX SH,instead of using array references such as var=('x' 'y' 'z') whcih are undefined in POSIX SH, i'm using the "set" command which adds every element to the positional array (man set)
-    emacsClientScript=""
-    emacsClientScript="${emacsClientScript} #!/usr/bin/env bash\n"
-    emacsClientScript="${emacsClientScript} args=( \"\$@\" )\n"
-    emacsClientScript="${emacsClientScript} command='emacsclient -ct'\n"
-    emacsClientScript="${emacsClientScript} \$command \${args[@]}"
-    for line in $emacsClientConstruct; do
-        tmp=$(printf "$line")
-        emacsClientScript+="$tmp\n"
-    done
-    echo ${emacsClientScript} > $emacsClientScriptFile
-    chmod +x $emacsClientScriptFile
+# Better use EOF
+cat << emacsClientScript > ${emacsClientScriptFile}
+#!/usr/bin/env bash
+args=( "\$@" )
+command='emacsclient -ct'
+\$command \${args[@]}
+emacsClientScript
+chmod +x $emacsClientScriptFile
 }
 
 # Shell based settings
@@ -63,9 +59,7 @@ fi
 emacsDaemon="$(systemctl --user is-active emacs.service)"
 if [ "${emacsDaemon}" = "active" ]; then
     # check if emacs wrapper exist and spawn it if not
-    if [[ ! -f ${emacsClientScriptFile} ]]; then
-        emacsClientScriptSpawn
-    fi
+    emacsClientScriptSpawn
     export EDITOR="${emacsClientScriptFile}"
 else 
     if [[ -e /usr/bin/nvim ]]; then
