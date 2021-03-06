@@ -1,8 +1,9 @@
-### Ciolansteen's ZSHrc
-
+# -*- mode: sh -*-
+# vim: filetype=sh
+##### iadrian_zshrc #####
 
 # Load mime info
-autoload -U zsh-mime-setup
+autoload -U zsh-mime-setup compinit
 zsh-mime-setup
 
 # Settings
@@ -10,7 +11,7 @@ zsh-mime-setup
 ZSH_THEME="funky"
 
 # Default block cursor
-PROMPT_COMMAND="echo -e '\033[?112c'"
+#PROMPT_COMMAND="echo -e '\033[?112c'"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -35,14 +36,39 @@ export ZSH="$HOME/.oh-my-zsh"
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
-HIST_STAMPS="%d/%m/%y %k:%M:%S"
+# HIST_STAMPS="%d/%m/%y %k:%M:%S"
 
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+# Remove history duplicates
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_BEEP
 
 # Default plugins are located in ~/.oh-my-zsh/plugins/*)
 # Custom plugins are located in ~/.oh-my-zsh/custom/plugins/
 # plugins=(rails git textmate ruby lighthouse)
+
+# Install oh-my-zsh if not present
+if [[ ! -d $ZSH ]]; then
+  echo "### Oh-My-ZSH not found."
+  echo "### After the prompt is back again, issue an exit command to complete the installation"
+  echo "Installing..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
+if [[ -f ~/.zshrc.pre-oh-my-zsh ]]; then
+  mv ~/.zshrc.pre-oh-my-zsh ~/.zshrc
+fi
+
+# Install zsh-syntax-highlighting if not present
+[[ -d $ZSH/plugins/zsh-syntax-highlighting ]] || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH/plugins/zsh-syntax-highlighting
+# Install zsh-autosuggestions if not present
+[[ -d $ZSH/plugins/zsh-autosuggestions ]] || git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH/plugins/zsh-autosuggestions
+
 plugins=(
     git
     helm
@@ -51,6 +77,8 @@ plugins=(
     docker
     docker-compose
     ruby
+    zsh-syntax-highlighting
+    zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -62,19 +90,16 @@ source $ZSH/oh-my-zsh.sh
 if [ -f ~/.dircolors ]; then
    eval `dircolors ~/.dircolors`
 fi
-
-# Zsh Syntax Highlighting
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# Zsh Autosugestions
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Use LS_COLORS 
+if [ -f ~/.local/share/lscolors.sh ]; then
+  source ~/.local/share/lscolors.sh
+fi
 
 ## VimMode for ZSH
 bindkey -v 
 ## Show Vim NORMAL/INSERT Status
 function insert-mode () { echo "%{$fg_bold[yellow]$bg[#]%}-- INSERT -- %{$reset_color%}" }
 function normal-mode () { echo "%{$fg_bold[white]$bg[#]%}-- NORMAL -- %{$reset_color%}" }
-
 
 function set-prompt () {
     case ${KEYMAP} in
@@ -85,7 +110,6 @@ function set-prompt () {
     RPS1="$VI_MODE"
     PS1="$PS1"
 }
-
 
 function zle-line-init zle-keymap-select {
     if [ $KEYMAP = vicmd ]; then
@@ -99,44 +123,28 @@ function zle-line-init zle-keymap-select {
     zle reset-prompt
 }
 
-preexec () { echo -ne '\e[5 q' }
-
 zle -N zle-line-init
 zle -N zle-keymap-select
 
 ## Saner KEYTIMEOUT (default = 40) to Kill <ESC> / I lag when switching -- INSERT -- / -- NORMAL -- in VimMode
 export KEYTIMEOUT=5
-#vimInsMode="%{$fg_bold[yellow]$bg[#]%}-- INSERT --%{$reset_color%}"
-#vimNormMode="%{$fg_bold[white]$bg[#]%}-- NORMAL --%{$reset_color%}"
-#
-#function zle-line-init zle-keymap-select {
-#    RPS1="${${KEYMAP/vicmd/${vimNormMode} }/(main|viins)/${vimInsMode} }"
-#    RPS2=$RPS1
-#    zle reset-prompt
-#}
-#
-
-## Don't use VimMode when inside MC to avoid mc hanging in ""-- NORMAL --" mode. 
-#if ! ps $PPID |grep mc; then
-#    bindkey -v 
-#    zle -N zle-line-init
-#    zle -N zle-keymap-select
-#fi
 
 # Prevent keeping Right PS info on that line after <CR>
 setopt transientrprompt
 
-# for linux console and RH/Debian xterm
-
 # SpecialKeys override to work with Vi-Mode
 if [[ "${terminfo[khome]}" != "" ]]; then
-  bindkey -M viins "\e[1~" beginning-of-line      # [Home] - Go to beginning of line
+  bindkey -M viins "\e[1~" beginning-of-line                       # [Home] - Go to beginning of line
   bindkey -M vicmd "\e[1~" beginning-of-line
+  bindkey -M viins "^[[H"  beginning-of-line
+  bindkey -M vicmd "^[[H"  beginning-of-line
 fi
 
 if [[ "${terminfo[kend]}" != "" ]]; then
-  bindkey -M viins "\e[4~" end-of-line      	   # [End] - Go to end of line
+  bindkey -M viins "\e[4~" end-of-line      	                   # [End] - Go to end of line
   bindkey -M vicmd "\e[4~" end-of-line
+  bindkey -M viins "^[[F"   end-of-line
+  bindkey -M vicmd "^[[F"   end-of-line
 fi
 
 if [[ "${terminfo[kich1]}" != "" ]]; then
@@ -150,54 +158,30 @@ if [[ "${terminfo[kdch1]}" != "" ]]; then
 fi
 
 if [[ "${terminfo[kpp]}" != "" ]]; then
-  bindkey -M viins "${terminfo[kpp]}" up-line-or-history     	   # [Page Up] - Up 1 Line or History Item 
+  bindkey -M viins "${terminfo[kpp]}" up-line-or-history/          # [Page Up] - Up 1 Line or History Item 
   bindkey -M vicmd "${terminfo[kpp]}" up-line-or-history
 fi
 
 if [[ "${terminfo[knp]}" != "" ]]; then
-  bindkey -M viins "${terminfo[knp]}" down-line-or-history      	   # [Page Down] - Down 1 Line or History Item 
+  bindkey -M viins "${terminfo[knp]}" down-line-or-history         # [Page Down] - Down 1 Line or History Item 
   bindkey -M vicmd "${terminfo[knp]}" down-line-or-history
 fi
-
-#bindkey -M viins "^[[A" history-beginning-search-backward      	   # [UP] - Search History Backward Based on Entered Letters 
-#bindkey -M vicmd "^[[A" history-beginning-search-backward 
-#
-#bindkey -M viins "^[[B" history-beginning-search-forward           # [DOWN] - Search History Forward Based on Entered Letters 
-#bindkey -M vicmd "^[[B" history-beginning-search-forward 
-#
-
 
 bindkey -M viins "^[[A" history-substring-search-up      	   # [UP] - Search History Backward Based on Entered Letters 
 bindkey -M vicmd "^[[A" history-substring-search-up 
 
-bindkey -M viins "^[[B" history-substring-search-down 
-         # [DOWN] - Search History Forward Based on Entered Letters 
+bindkey -M viins "^[[B" history-substring-search-down              # [DOWN] - Search History Forward Based on Entered Letters 
 bindkey -M vicmd "^[[B" history-beginning-search-down 
 
 # Other useful Vim Like Overrides
-bindkey -M vicmd 'u' undo 										# Undo in -- NORMAL -- Mode
-bindkey -M vicmd '^r' redo 										# Redo in -- NORMAL -- Mode
-bindkey -M vicmd '/' history-incremental-search-backward        # Use / for Search
+bindkey -M vicmd 'u' undo 					   # Undo in -- NORMAL -- Mode
+bindkey -M vicmd '^r' redo 					   # Redo in -- NORMAL -- Mode
+bindkey -M vicmd '/' history-incremental-search-backward           # Use / for Search
 
 # END Zsh Vim Mode
-##
-
 # Bindings for Xterm Home/End/Insert keys when not in Vi Mode
 bindkey "\e[1~" beginning-of-line
 bindkey "\e[4~" end-of-line
 bindkey "\e[2~" overwrite-mode
 
 unset zle_bracketed_paste
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,0 +1,7 @@
+*
+!.gitignore
+!.profile
+!.zshrc
+!.doom.d
+!.doom.d/init.el
+!.doom.d/*.org

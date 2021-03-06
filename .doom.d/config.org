@@ -1,0 +1,358 @@
+* Header
+#+BEGIN_SRC emacs-lisp
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+#+END_SRC
+* Basics
+** ID
+#+BEGIN_SRC emacs-lisp
+;; Some functionality uses this to identify you, e.g. GPG configuration, email
+;; clients, file templates and snippets.
+(setq user-full-name "Ionut Adrian Ciolan"
+      user-mail-address "iadrian@ciolan.net")
+#+END_SRC
+** UI
+*** MenuBar Enable/Disable
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+#+END_SRC
+*** Default Theme
+#+BEGIN_SRC emacs-lisp
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+(setq doom-theme 'doom-opera)
+#+END_SRC
+*** Fonts
+#+BEGIN_SRC emacs-lisp
+;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
+;; are the three important ones:
+;;
+;; + `doom-font'
+;; + `doom-variable-pitch-font'
+;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;;
+;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+;; font string. You generally only need these two:
+ (setq doom-font (font-spec :family "monospace" :size 14 :weight 'semi-light)
+       doom-variable-pitch-font (font-spec :family "sans" :size 13))
+#+END_SRC
+*** Italic Comments
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'font-lock-comment-face nil :slant 'italic)
+(set-face-attribute 'font-lock-function-name-face nil :slant 'italic)
+(set-face-attribute 'font-lock-variable-name-face nil :slant 'italic)
+#+END_SRC
+*** Mouse Support in Terminal
+#+BEGIN_SRC emacs-lisp
+(xterm-mouse-mode)
+#+END_SRC
+*** Switch Focus on Mouse Hover
+#+BEGIN_SRC emacs-lisp
+(setq mouse-autoselect-window t)
+#+END_SRC
+*** Highlight current line
+#+BEGIN_SRC emacs-lisp
+(global-hl-line-mode 1)
+#+END_SRC
+*** iBuffer
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(setq ibuffer-saved-filter-groups
+  (quote (("default"
+          ("Emacs" (or
+                     (name . "^\\*scratch\\*$")
+                     (name . "^\\*Messages\\*$")
+                   )
+          )
+          ("Help" (or
+                    (name . "^\\*Help\\*$")
+                    (name . "^\\*Apropos\\*$")
+                    (name . "^\\*info\\*$")
+                  )
+          )
+          ("dired" (mode . dired-mode))
+          ("org" (name ."^.*org$"))
+          ("web" (or
+                   (mode . web-mode)
+                   (mode . html-mode)
+                   (mode . php-mode)
+                   (mode . css-mode)
+                   (mode . js2-mode)
+                 )
+          )
+          ("Git" (name . "\*magit"))
+          ("shell" (or
+                     (mode . eshell-mode)
+                     (mode . shel-mode)
+                   )
+          )
+        ))
+)
+)
+(add-hook 'ibuffer-mode-hook
+  (lambda()
+    (ibuffer-auto-mode 1)
+    (ibuffer-switch-to-saved-filter-groups "default")
+  )
+)
+#+END_SRC
+*** Disable Some Buffer after their job is done
+#+BEGIN_SRC emacs-lisp
+(add-hook 'minibufer-exit-hook
+  '(lambda ()
+    (let (buffer "^\\*Completions\\*$"))
+    (and (get-buffer buffer)
+      (kill-buffer buffer)
+    )
+    (let (buffer "^\\*helm M-x\\*$"))
+    (and (get-buffer buffer)
+      (kill-buffer buffer)
+    )
+   )
+)
+#+END_SRC
+** Default Org Directory
+#+BEGIN_SRC emacs-lisp
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/org/")
+#+END_SRC
+** Line Numbers
+#+BEGIN_SRC emacs-lisp
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type 'relative)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+#+END_SRC
+** Editing
+*** Enable Drag And Drop Move Text
+#+BEGIN_SRC emacs-lisp
+(setq mouse-drag-and-drop-region t)
+#+END_SRC
+*** Save Cursor's Placew in File
+#+BEGIN_SRC emacs-lisp
+(save-place-mode 1)
+#+END_SRC
+* Packages
+** Installation (packages.el)
+*** Header
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+;; -*- no-byte-compile: t; -*-
+;;; $DOOMDIR/packages.el
+#+END_SRC
+*** Info
+#+BEGIN_SRC emacs-lisp :tangle no
+;; To install a package with Doom you must declare them here and run 'doom sync'
+;; on the command line, then restart Emacs for the changes to take effect -- or
+;; use 'M-x doom/reload'.
+
+;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+;(package! some-package)
+
+;; To install a package directly from a remote git repo, you must specify a
+;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
+;; https://github.com/raxod502/straight.el#the-recipe-format
+;(package! another-package
+;  :recipe (:host github :repo "username/repo"))
+
+;; If the package you are trying to install does not contain a PACKAGENAME.el
+;; file, or is located in a subdirectory of the repo, you'll need to specify
+;; `:files' in the `:recipe':
+;(package! this-package
+;  :recipe (:host github :repo "username/repo"
+;           :files ("some-file.el" "src/lisp/*.el")))
+
+;; If you'd like to disable a package included with Doom, you can do so here
+;; with the `:disable' property:
+;(package! builtin-package :disable t)
+
+;; You can override the recipe of a built in package without having to specify
+;; all the properties for `:recipe'. These will inherit the rest of its recipe
+;; from Doom or MELPA/ELPA/Emacsmirror:
+;(package! builtin-package :recipe (:nonrecursive t))
+;(package! builtin-package-2 :recipe (:repo "myfork/package"))
+
+;; Specify a `:branch' to install a package from a particular branch or tag.
+;; This is required for some packages whose default branch isn't 'master' (which
+;; our package manager can't deal with; see raxod502/straight.el#279)
+;(package! builtin-package :recipe (:branch "develop"))
+
+;; Use `:pin' to specify a particular commit to install.
+;(package! builtin-package :pin "1a2b3c4d5e")
+
+;; Doom's packages are pinned to a specific commit and updated from release to
+;; release. The `unpin!' macro allows you to unpin single packages...
+;(unpin! pinned-package)
+;; ...or multiple packages
+;(unpin! pinned-package another-pinned-package)
+;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
+;(unpin! t)
+#+END_SRC
+*** Packages
+**** Theming
+***** All-The-Icons-Dired
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! all-the-icons-dired)
+#+END_SRC
+***** Org-Superstar (Org-Bullets on steroids)
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-superstar)
+#+END_SRC
+***** Goldern Ratio
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! golden-ratio)
+#+END_SRC
+**** Persistent Scratch
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! persistent-scratch)
+#+END_SRC
+**** Editing
+***** LilyPond Mode
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+;;(package! lilypond-mode)
+#+END_SRC
+***** Pandoc Mode
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! pandoc-mode)
+#+END_SRC
+***** PKGBUILD Mode
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! pkgbuild-mode)
+#+END_SRC
+***** QML Mode
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! qml-mode)
+#+END_SRC
+** Configuration (config.el)
+*** Info
+#+BEGIN_SRC emacs-lisp :tangle no
+;; Here are some additional functions/macros that could help you configure Doom:
+;;
+;; - `load!' for loading external *.el files relative to this one
+;; - `use-package!' for configuring packages
+;; - `after!' for running code after a package has loaded
+;; - `add-load-path!' for adding directories to the `load-path', relative to
+;;   this file. Emacs searches the `load-path' when you load packages with
+;;   `require' or `use-package'.
+;; - `map!' for binding new keys
+;;
+;; To get information about any of these functions/macros, move the cursor over
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
+;; This will open documentation for it, including demos of how they are used.
+;;
+;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
+;; they are implemented.
+#+END_SRC
+*** Packages
+**** Centaur Tabs
+#+BEGIN_SRC emacs-lisp
+(use-package! centaur-tabs
+  :config
+  (setq centaur-tabs-height 10
+    centaur-tabs-set-icons t
+    centaur-tabs-gray-out-icons 'buffer
+    ; If not using Spacemacs
+    ; in order for the underline to display
+    ; correctly use the following line
+    x-underline-at-descent-line t
+  )
+  :bind
+    ("C-c h" . centaur-tabs-backward)
+    ("C-c l" . centaur-tabs-forward)
+    ("C-<left>" . centaur-tabs-backward)
+    ("C-<right>" . centaur-tabs-forward)
+)
+#+END_SRC
+**** Persistent Scratch
+ #+BEGIN_SRC emacs-lisp
+(use-package! persistent-scratch
+  :config
+  (setq persistent-scratch-backup-directory "~/.doom.d/scratch"
+        persistent-scratch-autosave-mode -1)
+;      (interactive "p")
+;      (if (and (or (null arg)               ; no prefix
+;                   (= arg 1)
+;               )
+;               (string-match-p "\\*scratch" (buffer-name))
+;          )
+;          (evil-ex-define-cmd "w" (lambda ()
+;                         (interactive)
+;                         (persistent-scratch-save)
+;                         (persistent-scratch-new-backup)
+;                       )
+;          )
+;      )
+  :bind
+  ("C-c s s" . (lambda ()
+                 (interactive)
+                 (persistent-scratch-save)
+                 (persistent-scratch-new-backup)
+               )
+  )
+  ("C-c s S" . persistent-scratch-save-to-file)
+  ("C-c s r" . persistent-scratch-restore)
+  ("C-c s R" . persistent-scratch-restore-from-file)
+  :hook (after-init . persistent-scratch-restore)
+)
+ #+END_SRC
+**** Dired-All-The-Icons
+#+BEGIN_SRC emacs-lisp
+(use-package! all-the-icons-dired
+  :after all-the-icons
+  :hook (dired-mode . all-the-icons-dired-mode)
+)
+#+END_SRC
+
+**** Org-Superstar (Org-Bullets on steroids)
+#+BEGIN_SRC emacs-lisp
+(use-package! org-superstar
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+)
+#+END_SRC
+
+**** Golden Ratio
+#+BEGIN_SRC emacs-lisp
+(use-package! golden-ratio
+;  :after-call pre-command-hook
+;  :config
+;  (golden-ratio-mode +1)
+  ;; Using this hook for resizing windows is less precise than
+  ;; `doom-switch-window-hook'.
+;  (remove-hook 'window-configuration-change-hook # 'golden-ratio)
+;  (add-hook 'doom-switch-window-hook # 'golden-ratio)
+)
+#+END_SRC
+
+**** LilyPond Mode
+#+BEGIN_SRC emacs-lisp
+(use-package! lilypond-mode
+
+)
+#+END_SRC
+**** Pandoc Mode
+#+BEGIN_SRC emacs-lisp
+(use-package! pandoc-mode)
+#+END_SRC
+
+**** PKGBUILD Mode
+#+BEGIN_SRC emacs-lisp
+(use-package! pkgbuild-mode)
+#+END_SRC
+
+**** QML Mode
+#+BEGIN_SRC emacs-lisp
+(use-package! qml-mode)
+#+END_SRC
+
+**** QML Mode
+#+BEGIN_SRC emacs-lisp
+(use-package! lsp-mode
+  :config
+    (dolist (dir '(
+                 "[/\\\\]mysql-data"
+                 ))
+    (push dir lsp-file-watch-ignored))
+)
+#+END_SRC
