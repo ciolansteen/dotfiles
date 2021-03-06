@@ -59,7 +59,9 @@ fi
 emacsDaemon="$(systemctl --user is-active emacs.service)"
 if [ "${emacsDaemon}" = "active" ]; then
     # check if emacs wrapper exist and spawn it if not
-    emacsClientScriptSpawn
+    if [[ ! -f ${emacsClientScriptFile} ]]; then
+        emacsClientScriptSpawn
+    fi
     export EDITOR="${emacsClientScriptFile}"
 else 
     if [[ -e /usr/bin/nvim ]]; then
