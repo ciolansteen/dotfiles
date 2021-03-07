@@ -20,7 +20,13 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-opera)
+(defun reload-theme (frame)
+  (with-selected-frame frame
+    (if (display-graphic-p)
+        (load-theme 'doom-opera-light t)
+      (load-theme 'doom-opera t))))
+
+(add-hook 'after-make-frame-functions #'reload-theme)
 #+END_SRC
 *** Fonts
 #+BEGIN_SRC emacs-lisp
@@ -37,6 +43,10 @@
  (setq doom-font (font-spec :family "monospace" :size 14 :weight 'semi-light)
        doom-variable-pitch-font (font-spec :family "sans" :size 13))
 #+END_SRC
+
+#+RESULTS:
+: #<font-spec nil nil sans nil nil nil nil nil 13 nil nil nil nil>
+
 *** Italic Comments
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
