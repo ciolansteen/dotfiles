@@ -1,7 +1,9 @@
+#!/usr/bin/env sh
 # -*- mode: sh -*-
 # vim: filetype=sh
 ##### iadrian_profile #####
 
+export TESTVAR="testing"
 # Settings
 ## Defaults
 ### Paths and Location Variables
@@ -11,6 +13,39 @@ tempFolder="${TMPDIR}/${USER}.profile"
 if [[ ! -d ${tempFolder} ]]; then
     mkdir "${tempFolder}"
 fi
+
+### Load User's Profile At login (autostart stuff like generating temporary scripts)
+loadUserProfileAtLogin="yes"
+
+loadUserProfileAtLoginTrigger="${HOME}/.loadUserProfileAtLogin"
+loadUserProfileAtLoginTmpFile="${tempFolder}/loadUserProfileAtLogin.sh.tmp"
+loadUserProfileAtLoginScriptFile="/etc/profile.d/loadUserProfileAtLogin.sh"
+
+if [[ ${loadUserProfileAtLogin} = *"yes" ]]; then
+    if [ ! -f ${loadUserProfileAtLoginTrigger} ]; then
+        touch ${loadUserProfileAtLoginTrigger}
+    fi
+    #### Generate the Loader Script in /etc/profile.d/loadUserProfileAtLogin.sh
+    if [ ! -f $loadUserProfileAtLoginTmpFile ]; then
+sudo cat << loadUserProfileAtLoginScript > ${loadUserProfileAtLoginTmpFile}
+if [ -f "\${HOME}/.loadUserProfileAtLogin" ]; then
+    . \${HOME}/.profile
+fi
+loadUserProfileAtLoginScript
+chmod +x ${loadUserProfileAtLoginTmpFile}
+    fi
+    if [ ! -f ${loadUserProfileAtLoginScriptFile} ]; then
+        sudo cp ${loadUserProfileAtLoginTmpFile}\
+            ${loadUserProfileAtLoginScriptFile}
+        $(${loadUserProfileAtLoginScriptFile})
+
+    fi
+else
+    if [ -f ${loadUserProfileAtLoginTrigger} ]; then
+        rm ${loadUserProfileAtLoginTrigger}
+    fi
+fi
+
 # Functions
 ## Load SH optional dependencies if they are present
 includeDeps (){
@@ -35,8 +70,8 @@ cdls(){
 ## Create a temporary script in ramdrive to handle emacs for MidnightCommander
 ### fix for MC being an ass when expanding variables containg spaces - see: https://github.com/fish-shell/fish-shell/issues/6162
 emacsClientScriptFile="${tempFolder}/emacsclient"
+### Script Creation Function
 emacsClientScriptSpawn(){
-# Better use EOF
 cat << emacsClientScript > ${emacsClientScriptFile}
 #!/usr/bin/env bash
 args=( "\$@" )
@@ -45,6 +80,33 @@ command='emacsclient -ct'
 emacsClientScript
 chmod +x $emacsClientScriptFile
 }
+### Generate the script if does not exist
+if [[ ! -f ${emacsClientScriptFile} ]]; then
+    emacsClientScriptSpawn
+fi
+
+## If chromium is installed, permit windows creation for each opened Xserver
+### (helpful for multiseat, Xephyr configurations)
+multiSeatChromiumFile="${tempFolder}/multiseatchromium"
+### Script Creation Function
+multiSeatChromiumScriptSpawn(){
+cat << multiSeatChromiumScript > ${multiSeatChromiumFile}
+#!/bin/sh
+exec $(which chromium)\
+    --enable-greasemonkey \
+    --enable-user-scripts\
+    --enable-extensions\
+    --user-data-dir=~/.config/chromium/\$DISPLAY "\$@"
+multiSeatChromiumScript
+chmod +x $multiSeatChromiumFile
+}
+
+# Do not generate the script unless Chromium is installed
+if [[ $(which chromium) != *"not found"* ]]; then
+    if [[ ! -f $multiSeatChromiumFile ]]; then
+        multiSeatChromiumScriptSpawn
+    fi
+fi
 
 # Shell based settings
 ## ZSH
@@ -58,12 +120,8 @@ fi
 # Preffered Editor
 emacsDaemon="$(systemctl --user is-active emacs.service)"
 if [ "${emacsDaemon}" = "active" ]; then
-    # check if emacs wrapper exist and spawn it if not
-    if [[ ! -f ${emacsClientScriptFile} ]]; then
-        emacsClientScriptSpawn
-    fi
     export EDITOR="${emacsClientScriptFile}"
-else 
+else
     if [[ -e /usr/bin/nvim ]]; then
         export EDITOR="nvim"
     elif [[ -e /usr/bin/vim ]]; then
@@ -72,6 +130,7 @@ else
         export EDITOR="vi"
     fi
 fi
+
 ## For when I type edit because fu that's why...
 alias edit=${EDITOR}
 ## For whenever I feel lazy (mostyly)
