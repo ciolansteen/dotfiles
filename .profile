@@ -76,7 +76,7 @@ cat << emacsClientScript > ${emacsClientScriptFile}
 #!/usr/bin/env bash
 args=( "\$@" )
 command='emacsclient -ct'
-\$command \${args[@]}
+\$command "\${args[@]}"
 emacsClientScript
 chmod +x $emacsClientScriptFile
 }
@@ -96,7 +96,7 @@ exec $(which chromium)\
     --enable-greasemonkey \
     --enable-user-scripts\
     --enable-extensions\
-    --user-data-dir=~/.config/chromium/\$DISPLAY "\$@"
+    --user-data-dir=\${HOME}/.config/chromium/\$DISPLAY "\$@"
 multiSeatChromiumScript
 chmod +x $multiSeatChromiumFile
 }
