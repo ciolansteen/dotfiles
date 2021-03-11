@@ -10,7 +10,7 @@
 !.doom.d
 !.doom.d/init.el
 !.doom.d/*.org
-!.local/*
-!.local/share/*
-!.local/share/applications/*
+!.local
+!.local/share/
+!.local/share/applications
 !.local/share/applications/sway.desktop
