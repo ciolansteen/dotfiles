@@ -8,10 +8,15 @@ export TESTVAR="testing"
 ## Defaults
 ### Paths and Location Variables
 TMPDIR="/tmp"
+CONFDIR="${HOME}/.config"
 ### Check for $tempFolder folder and create it if it doesn't exist
 tempFolder="${TMPDIR}/${USER}.profile"
 if [[ ! -d ${tempFolder} ]]; then
     mkdir "${tempFolder}"
+fi
+autoStartFolder="${CONFDIR}/autostart"
+if [[ ! -d ${autoStartFolder} ]]; then
+    mkdir -p "${autoStartFolder}"
 fi
 
 ### Load User's Profile At login (autostart stuff like generating temporary scripts)
@@ -38,7 +43,6 @@ chmod +x ${loadUserProfileAtLoginTmpFile}
         sudo cp ${loadUserProfileAtLoginTmpFile}\
             ${loadUserProfileAtLoginScriptFile}
         $(${loadUserProfileAtLoginScriptFile})
-
     fi
 else
     if [ -f ${loadUserProfileAtLoginTrigger} ]; then
@@ -106,6 +110,45 @@ if [[ $(which chromium) != *"not found"* ]]; then
     if [[ ! -f $multiSeatChromiumFile ]]; then
         multiSeatChromiumScriptSpawn
     fi
+fi
+
+## Merge Xauthority with newly created MIT-MAGIC-COOKIE in /run/user/${UID}/xauth_????
+
+mergeXauthorityFilesScriptFile="${tempFolder}/mergeXauthorityFiles"
+
+mergeXauthorityFilesScriptSpawn(){
+cat << mergeXauthorityFilesScript > ${mergeXauthorityFilesScriptFile}
+#!/bin/sh
+xauthFiles=\$(ls -lah /run/user/\${UID} | grep xauth | rev| cut -d " " -f1 | rev)
+
+for xauthFile in \${xauthFiles}; do
+    xauth -f ~/.Xauthority merge /run/user/\${UID}/\$xauthFile
+done
+
+mergeXauthorityFilesScript
+chmod +x $mergeXauthorityFilesScriptFile
+}
+
+# Do not generate the script if exists
+if [[ ! -f $mergeXauthorityFilesFile ]]; then
+    mergeXauthorityFilesScriptSpawn
+    /$mergeXauthorityFilesScriptFile
+fi
+
+# Create desktopfile for automatically merge xauth keys for logged user - Fixes Emacs Daemon not being aware of the new cookie generated in /run/user/{UID}/xauth_XXXX if started before the cookie was created (ie - at desktop environment load)
+mergeXauthorityFilesDotDesktopFile="${autoStartFolder}/mergeXauthorityFiles.desktop"
+mergeXauthorityFilesDotDesktopFileSpawn(){
+cat << mergeXauthorityFilesDotDesktop > ${mergeXauthorityFilesDotDesktopFile}
+[Desktop Entry]
+Comment= Loads $mergeXauthorityFilesScriptFile at DE startup
+Exec=sh -c $mergeXauthorityFilesScriptFile
+Name=mergeXauthorityFiles
+StartupNotify=true
+mergeXauthorityFilesDotDesktop
+}
+# Do not generate the script if exists
+if [[ ! -f $mergeXauthorityFilesDotDesktopFile ]]; then
+    mergeXauthorityFilesDotDesktopFileSpawn
 fi
 
 # Shell based settings

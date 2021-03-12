@@ -32,7 +32,7 @@ font pango: Noto Bold 8
 # screen before suspend. Use loginctl lock-session to lock your screen.
 #exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 #exec hsetroot -solid "#303336"
-#exec_always --no-startup-id compton --config ~/.config/picon.conf --experimental-backends
+exec_always --no-startup-id compton --config ~/.config/picon.conf --experimental-backends
 
 # use these keys for focus, movement, and resize directions when reaching for
 # the arrows is not convenient
