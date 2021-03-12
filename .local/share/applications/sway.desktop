@@ -1,23 +1,12 @@
 [Desktop Entry]
 Categories=Utility;WindowManager;
-Comment[en_GB]=Tiling Window Manager
-Comment=Tiling Window Manager
+Comment=Start Sway Tiling Window Manager in a window
+TryExec=sway
 Exec=env WLR_NO_HARDWARE_CURSORS=1 sway
-GenericName[en_GB]=Window Manager
 GenericName=Window Manager
-GenericName[de]=WindowManger
 Icon=/usr/share/doc/i3/logo-30.png
 Keywords=Text;editor;
-MimeType=
-Name[en_GB]=Sway
 Name=Sway
-Path=
 StartupNotify=false
 Terminal=false
-TerminalOptions=
-TryExec=sway
 Type=Application
-X-DBUS-ServiceName=
-X-DBUS-StartupType=
-X-KDE-SubstituteUID=false
-X-KDE-Username=
