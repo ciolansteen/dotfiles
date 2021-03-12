@@ -140,7 +140,7 @@ mergeXauthorityFilesDotDesktopFile="${autoStartFolder}/mergeXauthorityFiles.desk
 mergeXauthorityFilesDotDesktopFileSpawn(){
 cat << mergeXauthorityFilesDotDesktop > ${mergeXauthorityFilesDotDesktopFile}
 [Desktop Entry]
-Comment= Loads $mergeXauthorityFilesScriptFile at DE startup
+Comment=Forces Xauthority update from /run/user/\${UID} by loading $mergeXauthorityFilesScriptFile at DE startup
 Exec=sh -c $mergeXauthorityFilesScriptFile
 Name=mergeXauthorityFiles
 StartupNotify=true
