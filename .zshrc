@@ -79,6 +79,7 @@ plugins=(
     ruby
     zsh-syntax-highlighting
     zsh-autosuggestions
+    tmux
 )
 
 source $ZSH/oh-my-zsh.sh
