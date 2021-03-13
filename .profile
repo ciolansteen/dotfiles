@@ -12,43 +12,46 @@ CONFDIR="${HOME}/.config"
 ### Check for $tempFolder folder and create it if it doesn't exist
 tempFolder="${TMPDIR}/${USER}.profile"
 if [[ ! -d ${tempFolder} ]]; then
-    mkdir "${tempFolder}"
+    mkdir ${tempFolder}
+    chmod 775 ${tempFolder}
 fi
 autoStartFolder="${CONFDIR}/autostart"
 if [[ ! -d ${autoStartFolder} ]]; then
-    mkdir -p "${autoStartFolder}"
+    mkdir -p ${autoStartFolder}
 fi
 
 ### Load User's Profile At login (autostart stuff like generating temporary scripts)
-loadUserProfileAtLogin="yes"
+loadUserProfileOnceAtStartup="yes"
+loadUserProfileOnceAtStartupScriptFile="/etc/profile.d/loadUserProfileOnceAtStartup.${USER}.sh"
+loadUserProfileOnceAtStartupTmpScriptFile="${tempFolder}/loadUserProfileOnceAtStartup.sh.tmp"
+userProfileLoaded="${tempFolder}/userProfileLoaded"
 
-loadUserProfileAtLoginTrigger="${HOME}/.loadUserProfileAtLogin"
-loadUserProfileAtLoginTmpFile="${tempFolder}/loadUserProfileAtLogin.sh.tmp"
-loadUserProfileAtLoginScriptFile="/etc/profile.d/loadUserProfileAtLogin.sh"
-
-if [[ ${loadUserProfileAtLogin} = *"yes" ]]; then
-    if [ ! -f ${loadUserProfileAtLoginTrigger} ]; then
-        touch ${loadUserProfileAtLoginTrigger}
-    fi
-    #### Generate the Loader Script in /etc/profile.d/loadUserProfileAtLogin.sh
-    if [ ! -f $loadUserProfileAtLoginTmpFile ]; then
-sudo cat << loadUserProfileAtLoginScript > ${loadUserProfileAtLoginTmpFile}
-if [ -f "\${HOME}/.loadUserProfileAtLogin" ]; then
-    . \${HOME}/.profile
+if [[ ${loadUserProfileOnceAtStartup} = *"yes" ]]; then
+    #### Generate the Loader Script in ${loadUserProfileOnceAtStartupScriptFile}
+    if [ ! -f $loadUserProfileOnceAtStartupTmpScriptFile ]; then
+      sudo cat << loadUserProfileOnceAtStartupScript > ${loadUserProfileOnceAtStartupTmpScriptFile}
+#!/bin/sh
+if [ ! -f ${userProfileLoaded} ]; then
+   if [ ! -d ${tempFolder} ]; then
+      mkdir ${tempFolder}
+      chown \${UID}:\${GID} ${tempFolder}
+      chmod 775 ${tempFolder}
+   fi
+   touch ${userProfileLoaded} && . ${HOME}/.profile
 fi
-loadUserProfileAtLoginScript
-chmod +x ${loadUserProfileAtLoginTmpFile}
+loadUserProfileOnceAtStartupScript
+chmod +x ${loadUserProfileOnceAtStartupTmpScriptFile}
     fi
-    if [ ! -f ${loadUserProfileAtLoginScriptFile} ]; then
-        sudo cp ${loadUserProfileAtLoginTmpFile}\
-            ${loadUserProfileAtLoginScriptFile}
-        $(${loadUserProfileAtLoginScriptFile})
-    fi
+    sudo cp ${loadUserProfileOnceAtStartupTmpScriptFile}\
+        ${loadUserProfileOnceAtStartupScriptFile}
+    $(${loadUserProfileOnceAtStartupScriptFile})
+
 else
-    if [ -f ${loadUserProfileAtLoginTrigger} ]; then
-        rm ${loadUserProfileAtLoginTrigger}
+    if [ -f ${loadUserProfileOnceAtStartupScriptFile} ]; then
+        sudo rm ${loadUserProfileOnceAtStartupScriptFile}
     fi
 fi
+
 
 # Functions
 ## Load SH optional dependencies if they are present
@@ -115,22 +118,25 @@ fi
 ## Merge Xauthority with newly created MIT-MAGIC-COOKIE in /run/user/${UID}/xauth_????
 
 mergeXauthorityFilesScriptFile="${tempFolder}/mergeXauthorityFiles"
-
 mergeXauthorityFilesScriptSpawn(){
 cat << mergeXauthorityFilesScript > ${mergeXauthorityFilesScriptFile}
 #!/bin/sh
-xauthFiles=\$(ls -lah /run/user/\${UID} | grep xauth | rev| cut -d " " -f1 | rev)
-
-for xauthFile in \${xauthFiles}; do
-    xauth -f ~/.Xauthority merge /run/user/\${UID}/\$xauthFile
-done
-
+runUserPath="/run/user/\${UID}"
+currentUserFolder="ls -lah \${runUserPath}"
+if [ "\${UID}" -ge "1000" ]; then
+    xauthFiles=\$(\${currentUserFolder} | grep xauth | rev| cut -d " " -f1 | rev)
+    if [[ ! -z \$xauthFiles ]]; then
+       for xauthFile in \${xauthFiles}; do
+        xauth -f ~/.Xauthority merge /run/user/\${UID}/\$xauthFile
+       done
+    fi
+fi
 mergeXauthorityFilesScript
 chmod +x $mergeXauthorityFilesScriptFile
 }
 
 # Do not generate the script if exists
-if [[ ! -f $mergeXauthorityFilesFile ]]; then
+if [[ ! -f $mergeXauthorityFilesScriptFile ]]; then
     mergeXauthorityFilesScriptSpawn
     /$mergeXauthorityFilesScriptFile
 fi
