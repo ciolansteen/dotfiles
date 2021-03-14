@@ -21,7 +21,7 @@ if [[ ! -d ${autoStartFolder} ]]; then
 fi
 
 ### Load User's Profile At login (autostart stuff like generating temporary scripts)
-loadUserProfileOnceAtStartup="yes"
+loadUserProfileOnceAtStartup="no"
 loadUserProfileOnceAtStartupScriptFile="/etc/profile.d/loadUserProfileOnceAtStartup.${USER}.sh"
 loadUserProfileOnceAtStartupTmpScriptFile="${tempFolder}/loadUserProfileOnceAtStartup.sh.tmp"
 userProfileLoaded="${tempFolder}/userProfileLoaded"

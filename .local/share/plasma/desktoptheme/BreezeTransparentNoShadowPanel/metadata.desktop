@@ -1,0 +1,28 @@
+[Desktop Entry]
+Name=Breeze Transparent No Shadow Panel
+Name[ro]=Briză Panou Transparent Fără Umbră
+Comment=Breeze Transparent Panel w/o Shadow
+Comment[ro]=Briză Panou Transparent Fără Umbră
+
+X-KDE-PluginInfo-Author=KDE Visual Design Group
+X-KDE-PluginInfo-Email=kde-artists@kde.org
+X-KDE-PluginInfo-Name=default
+X-KDE-PluginInfo-Version=5.76.0
+X-KDE-PluginInfo-Website=https://plasma.kde.org
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-License=LGPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-API=5.0
+
+[Wallpaper]
+defaultWallpaperTheme=Next
+defaultFileSuffix=.png
+defaultWidth=1920
+defaultHeight=1080
+
+[ContrastEffect]
+enabled=false
+contrast=0.2
+#intensity is disabled, in order to auto adjust to the chosen theme color
+#intensity=2.0
+saturation=1.7
