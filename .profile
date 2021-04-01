@@ -202,7 +202,8 @@ alias pigrep='grep -Pi --color'
 alias search='sudo updatedb && sudo locate -i'
 
 ## CPU + GPU Monitor
-alias cpumonitor='watch -n0.1 "grep \"cpu MHz\" /proc/cpuinfo && echo \"\" && sensors && nvidia-smi -q -d temperature"'
+alias cpumonitor='watch -n0.1 "grep \"cpu MHz\" /proc/cpuinfo && echo \"\" && sensors"'
+alias gpumonitor='nvidia-smi -q -d temperature'
 
 ## Preserve UserSettings for sudo
 alias sudo='sudo -E '
@@ -217,7 +218,7 @@ alias virsh='sudo virsh'
 alias vired='virsh edit'
 
 # Pacman Aliasses
-alias yupdate='yay -Syyu && pkcon refresh'
+alias yupdate='yay -Syyu && sudo pkcon refresh'
 alias pacman='sudo pacman'
 alias pacinst='sudo pacman -S'
 alias pacsearch='sudo pacman -Ss'

@@ -186,3 +186,4 @@ bindkey "\e[4~" end-of-line
 bindkey "\e[2~" overwrite-mode
 
 unset zle_bracketed_paste
+
